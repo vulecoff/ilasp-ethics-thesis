@@ -14,3 +14,8 @@ holds(-S, T) :- not holds(S, T), _fluent(S), _time(T).
 
 missingPrecondition(F, E, T) :- precondition(F, E), not holds(F, T). 
 % what is the point of precondition???
+incomplete(E, T) :- missingPrecondition(F, E, T). 
+possible(E, T) :- not incomplete(E, T). % any event is possible. For spontaneous/automatic event
+overtaken(E1, T) :- possible(E1, T), possible(E2, T), priority(E2, E1), E1 != E2. % get the best
+occurs(E, T) :- possible(E, T), not overtaken(E, T), automatic(E). 
+:- occurs(E, T), not possible(E, T). 
