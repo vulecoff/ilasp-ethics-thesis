@@ -58,7 +58,7 @@ T = 1 :- happens(switch, T). % enforce that we can only switch at time 1
 happens(run(sideTrack, 0), T) :- holdsAt(switched, T), T = 2. % triggered events. Sufficient condition? 
 
 %TODO: distinguish the semantics of trigger condition for happens vs intitiates
-happens(run(Trk, TrkNo), T) :- holdsAt(on(train, Trk, TrkNo), T), negholdsAt(crashed, T), maxTracks(Q), TrkNo < Q.
+happens(run(Trk, TrkNo), T) :- holdsAt(on(train, Trk, TrkNo), T), negholdsAt(crashed, T), maxTracks(Q), TrkNo < Q, T > 0.
 
 nonInertial(on(train, Trk, TrkNo + 1)) :- negholdsAt(crashed, T), time(T), holdsAt(on(train, Trk, TrkNo), T).
 initiates(run(Trk, TrkNo), on(train, Trk, TrkNo + 1), T) :- negholdsAt(crashed, T), time(T), holdsAt(on(train, Trk, TrkNo), T).
