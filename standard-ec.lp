@@ -1,8 +1,8 @@
-% clipped if terminated or released
+% clipped if terminated or released. Exclusive at two ends
 clipped(T1, F, T2) :- terminates(E, F, T), happens(E, T), T1 < T, T < T2, time(T1), time(T2), not nonInertial(F). 
 clipped(T1, F, T2) :- releases(E, F, T), happens(E, T), T1 < T, T < T2, time(T1), time(T2), not nonInertial(F). 
 
-% declipped if initiated or released
+% declipped if initiated or released. Exclusive at two ends.
 declipped(T1, F, T2) :- initiates(E, F, T), happens(E, T), T1 < T, T < T2, time(T1), time(T2), not nonInertial(F). 
 declipped(T1, F, T2) :- releases(E, F, T), happens(E, T), T1 < T, T < T2, time(T1), time(T2), not nonInertial(F). 
 
@@ -28,39 +28,11 @@ indeterminate(P, T) :- not holdsAt(P, T), not -holdsAt(P, T), time(T), fluent(P)
 fluentFlipped(P, T + 1, toTrue) :- -holdsAt(P, T), holdsAt(P, T + 1). 
 fluentFlipped(P, T + 1, toFalse) :- holdsAt(P, T), -holdsAt(P, T + 1). 
 
+% enforces that all happens must occur after the initial time. 
+T > 0 :- happens(E, T). 
+
 %#show indeterminate/2. #show fluentFlipped/3.
 
 % Required domain predicates: time, fluent, event
 %% END OF EVENT CALC AXIOMS
-
-% define domain, finite predicates-dataset
-time(0..10).
-fluent(trainRunning; trainCrashed; switched). %TODO: how to capture the on fluents
-maxTracks(7). 
-
-initiallyN(switched). 
-initiallyP(on(group1, sideTrack, 3); on(group5, mainTrack, 4)). 
-initiallyP(alive(group1); alive(group5)). 
-initiallyP(trainRunning). initiallyN(trainCrashed). 
-initiallyP(on(train, mainTrack, 0)).  nonInertial(on(train, mainTrack, 0)). % how can I say nonInertial(on(train, Var, Var))
-
-
-% new nonInertial fluent generated. If keeps running, train moves to a new fluent-state. 
-holdsAt(on(train, Trk, TrkNo + 1), T + 1) :- holdsAt(on(train, Trk, TrkNo), T), holdsAt(trainRunning, T), maxTracks(V), TrkNo < V. 
-nonInertial(on(train, Trk, TrkNo + 1)) :- holdsAt(on(train, Trk, TrkNo), T), holdsAt(trainRunning, T), maxTracks(V), TrkNo < V. 
-
-% causal effect 
-% switches only occur at first time point
-initiates(switch, switched, T) :- time(T), -holdsAt(switched, 0), T = 0. 
-T = 0 :- happens(switch, T). % enforce that we can only switch at time 01
-holdsAt(on(train, sideTrack, 1), T + 1) :- holdsAt(switched, T), T = 0, holdsAt(on(train, mainTrack, 0), T). 
-nonInertial(on(train, sideTrack, 1)) :- holdsAt(switched, T), T = 0, holdsAt(on(train, mainTrack, 0), T). 
-
-
-
-% prints
-prints(holdsAt(on(train, Trk, TrkNo), T)) :- holdsAt(on(train, Trk, TrkNo), T). 
-prints(nonInertial(X)) :- nonInertial(X).
-
-#show prints/1.
 

@@ -1,5 +1,5 @@
 % ends -rule
-end(A, P) :- action(A), patient(P), goalOf(A, G), #sum {1: intention(G, P, pos)} > 0, not intention(G, P, neg). % close world for intention here
+end(A, P) :- action(A), patient(P), goalOf(A, G), #sum {G, P, pos: intention(G, P, pos)} > 0, not intention(G, P, neg). % close world for intention here
 
 
 % F-rule framework 
