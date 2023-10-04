@@ -3,12 +3,15 @@
 time(0..12).
 fluent(crashed; switched). %TODO: how to capture the on fluents
 maxTracks(7). 
+trk(mainTrack; sideTrack). 
+trkNo(0..X) :- maxTracks(X). 
 
 initiallyN(switched). 
 initiallyP(on(group(1), sideTrack, 3); on(group(5), mainTrack, 4)). 
 initiallyP(alive(group(1)); alive(group(5))). 
 initiallyN(crashed). 
-initiallyP(on(train, mainTrack, 0)).  nonInertial(on(train, mainTrack, 0)). % how can I say nonInertial(on(train, Var, Var))
+initiallyP(on(train, mainTrack, 0)).  
+nonInertial(on(train, Trk, TrkNo)) :- trk(Trk), trkNo(TrkNo). 
 
 % events/actions: run(track, trackNo), switch, crash
 
@@ -19,12 +22,13 @@ T = 1 :- happens(switch, T). % enforce that we can only switch at time 1
 % GOAL: to initiate --> on either track? What if not switched? 
 % the difference in DECIDES to switch, or not SWITCH. action omission? effect of NOT-DOING it
 
-% what is the best way to model action --> action semantics? Instantenous action? 
+% what is the best way to model action --> action semantics? 
 % or fluent -> fluent semantics. can only be achieved by introducing a triggered event by the original fluent
 happens(run(sideTrack, 1), T) :- happens(switch, T).
 holdsAt(on(train, sideTrack, 1), T) :- happens(switch, T).
 happens(run(mainTrack, 1), T) :- not happens(switch, T), time(T), T = 1. 
 holdsAt(on(train, mainTrack, 1), T) :- not happens(switch, T), time(T), T = 1. 
+
 
 % INTERESTING: Does decision of switch matter? It would kill the people right away. But 
 % if not I couldve prevented that, --> moral
