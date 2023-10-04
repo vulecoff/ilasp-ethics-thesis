@@ -22,7 +22,7 @@ happens(run(sideTrack, 0)) :- holdsAt(switched, T). % triggered events. Sufficie
 happens(run(Trk, TrkNo + 1), T) :- holdsAt(on(train, Trk, TrkNo), T), -holdsAt(crashed, T). 
 
 initiates(run(Trk, TrkNo), on(train, Trk, TrkNo + 1), T) :- -holdsAt(crashed, T), time(T), holdsAt(on(train, Trk, TrkNo), T).
-initiates(run(Trk, TrkNo), crashed, T) :- -holdsAt(crashed, T), time(T), holdsAt(on(group(_), Trk, TrkNo), T). 
+initiates(run(Trk, TrkNo), crashed, T) :- -holdsAt(crashed, T), time(T), holdsAt(on(group(), Trk, TrkNo), T). 
 terminates(run(Trk, TrkNo), alive(group(G)), T)  :- time(T), holdsAt(on(group(G), Trk, TrkNo), T).
 
 happens(switch, 1). 

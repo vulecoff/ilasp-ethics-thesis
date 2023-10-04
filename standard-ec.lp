@@ -17,7 +17,7 @@ holdsAt(F, T2) :- initiates(E, F, T1), happens(E, T1), not clipped(T1, F, T2), T
 % holding f for nonInertial fluents. nonInertial fluents can be directly derived from other fluents
 holdsAt(F, 0) :- initiallyP(F), nonInertial(F). 
 -holdsAt(F, 0) :- initiallyN(F), nonInertial(F). 
-holdsAt(F, T) :- initiates(E, F, T), happens(E, T), nonInertial(F). 
+holdsAt(F, T + 1) :- initiates(E, F, T), happens(E, T), nonInertial(F). 
 
 % releases removes the fluent from the commonsense law of inertia, so in some model it can be true 
 % and some can be false --> this "indeterminate" rule is to check for any such dangling fluents
