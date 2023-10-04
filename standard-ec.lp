@@ -15,7 +15,7 @@ holdsAt(F, T2) :- initiates(E, F, T1), happens(E, T1), not clipped(T1, F, T2), T
 -holdsAt(F, T2) :- terminates(E, F, T1), happens(E, T1), not declipped(T1, F, T2), T1 < T2, time(T1), time(T2), not nonInertial(F). 
 
 % holding f for nonInertial fluents. nonInertial fluents can be directly derived from other fluents
-% nonInertial can be simulated by immediately terminates-ing after initiated
+% nonInertial can be simulated by immediately terminates-ing after initiated. Effect constraint (to terminate old fluents) or triggered events to automatically trigger the terminationHappening
 holdsAt(F, 0) :- initiallyP(F), nonInertial(F). 
 -holdsAt(F, 0) :- initiallyN(F), nonInertial(F). 
 holdsAt(F, T + 1) :- initiates(E, F, T), happens(E, T), nonInertial(F). 
