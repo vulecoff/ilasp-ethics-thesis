@@ -1,6 +1,6 @@
 %% START OF TROLLEY PROBLEM ENCODING
 % define domain, finite predicates-dataset
-time(0..10).
+time(0..12).
 fluent(crashed; switched). %TODO: how to capture the on fluents
 maxTracks(7). 
 
@@ -16,19 +16,33 @@ initiallyP(on(train, mainTrack, 0)).  nonInertial(on(train, mainTrack, 0)). % ho
 % switches only occur at first time point
 initiates(switch, switched, T) :- time(T), -holdsAt(switched, 0), T = 1. 
 T = 1 :- happens(switch, T). % enforce that we can only switch at time 1
-happens(run(sideTrack, 0)) :- holdsAt(switched, T). % triggered events. Sufficient condition? 
+% GOAL: to initiate --> on either track? What if not switched? 
+% the difference in DECIDES to switch, or not SWITCH. action omission? effect of NOT-DOING it
 
-%TODO: distinguish the semantics of trigger condition for happens vs intitiates
-happens(run(Trk, TrkNo + 1), T) :- holdsAt(on(train, Trk, TrkNo), T), -holdsAt(crashed, T). 
+% what is the best way to model action --> action semantics? Instantenous action? 
+% or fluent -> fluent semantics. can only be achieved by introducing a triggered event by the original fluent
+happens(run(sideTrack, 1), T) :- happens(switch, T).
+holdsAt(on(train, sideTrack, 1), T) :- happens(switch, T).
+happens(run(mainTrack, 1), T) :- not happens(switch, T), time(T), T = 1. 
+holdsAt(on(train, mainTrack, 1), T) :- not happens(switch, T), time(T), T = 1. 
 
-initiates(run(Trk, TrkNo), on(train, Trk, TrkNo + 1), T) :- -holdsAt(crashed, T), time(T), holdsAt(on(train, Trk, TrkNo), T).
-initiates(run(Trk, TrkNo), crashed, T) :- -holdsAt(crashed, T), time(T), holdsAt(on(group(), Trk, TrkNo), T). 
+% INTERESTING: Does decision of switch matter? It would kill the people right away. But 
+% if not I couldve prevented that, --> moral
+
+happens(run(Trk, TrkNo), T) :- T >= 2, holdsAt(on(train, Trk, TrkNo), T), -holdsAt(crashed, T), maxTracks(Q), TrkNo < Q.
+
+nonInertial(on(train, Trk, TrkNo + 1)) :- -holdsAt(crashed, T), time(T), holdsAt(on(train, Trk, TrkNo), T), TrkNo >= 1. 
+initiates(run(Trk, TrkNo), on(train, Trk, TrkNo + 1), T) :- -holdsAt(crashed, T), time(T), holdsAt(on(train, Trk, TrkNo), T), TrkNo >= 1. 
+initiates(run(Trk, TrkNo), crashed, T) :- -holdsAt(crashed, T), time(T), holdsAt(on(group(X), Trk, TrkNo), T). 
 terminates(run(Trk, TrkNo), alive(group(G)), T)  :- time(T), holdsAt(on(group(G), Trk, TrkNo), T).
 
 happens(switch, 1). 
 
-
-prints(holdsAt(on(train, Trk, TrkNo), T)) :- holdsAt(on(train, Trk, TrkNo), T). 
-prints(nonInertial(X)) :- nonInertial(X).
-
+%prints(initiates(run(mainTrack, P), on(P1, P2, P3),  K)) :- initiates(run(mainTrack, P), on(P1,P2,P3), Y,  K). 
+%prints(holdsAt(on(train, Trk, TrkNo), T)) :- holdsAt(on(train, Trk, TrkNo), T). 
+%prints(nonInertial(X)) :- nonInertial(X).
+%prints(holdsAt(crashed, T)) :- holdsAt(crashed, T). 
+prints(dead(Q)) :- -holdsAt(alive(Q), T).
 #show prints/1.
+
+% what is the formal way to "trigger" action, or non-inertial fluents? 
