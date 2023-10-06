@@ -43,7 +43,7 @@ terminates(run(ToTrk, ToTrkNo), on(train, FromTrk, FromTrkNo), T) :- switchTrack
 initiates(run(Trk, TrkNo), crashed, T) :- -holdsAt(crashed, T), time(T), holdsAt(on(group(X), Trk, TrkNo), T). 
 terminates(run(Trk, TrkNo), alive(group(G)), T)  :- time(T), holdsAt(on(group(G), Trk, TrkNo), T).
 
-%happens(switch, 1). 
+happens(switch, 1). 
 
 %prints(initiates(run(sideTrack, P), on(P1, P2, P3),  K)) :- initiates(run(sideTrack, P), on(P1,P2,P3),  K). 
 prints(holdsAt(on(train, Trk, TrkNo), T)) :- holdsAt(on(train, Trk, TrkNo), T), testTime(T). 
