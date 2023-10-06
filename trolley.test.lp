@@ -19,17 +19,6 @@ initiallyP(on(train, mainTrack, 0)).
 % switches only occur at first time point
 initiates(switch, switched, T) :- time(T), -holdsAt(switched, 0), T = 1. 
 T = 1 :- happens(switch, T). % enforce that we can only switch at time 1
-% GOAL: to initiate --> on either track? What if not switched? 
-% the difference in DECIDES to switch, or not SWITCH. action omission? effect of NOT-DOING it
-
-% what is the best way to model action --> action semantics? 
-% or fluent -> fluent semantics. can only be achieved by introducing a triggered event by the original fluent
-%*
-happens(run(sideTrack, 1), T) :- happens(switch, T).
-holdsAt(on(train, sideTrack, 1), T) :- happens(switch, T).
-happens(run(mainTrack, 1), T) :- not happens(switch, T), time(T), T = 1. 
-holdsAt(on(train, mainTrack, 1), T) :- not happens(switch, T), time(T), T = 1. 
-*%
 
 % triggered event: keeps running if currently on this track and not crashed
 happens(run(Trk, TrkNo + 1), T) :- T >= 1, not switchTrack(from(Trk, TrkNo), _), holdsAt(on(train, Trk, TrkNo), T), 
@@ -69,6 +58,6 @@ prints(-holdsAt(switched, T)) :- -holdsAt(switched, T), testTime(T).
 %prints(happens(X, Y)) :- happens(X, Y). 
 %prints(holdsAt(switched, T+ 1)) :- -holdsAt(switched, T), holdsAt(switched, T + 1). 
 prints(dead(Q)) :- -holdsAt(alive(Q), T).
-testTime(2). 
+%testTime(2). 
 #show prints/1.
 

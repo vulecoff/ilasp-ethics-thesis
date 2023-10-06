@@ -7,3 +7,5 @@ initiallyP(alive).
 initiallyN(loaded).
 initiallyN(dead). 
 happens(load, 1). happens(sneeze, 3). happens(shoot, 5). 
+
+#show fluentFlipped/3.
