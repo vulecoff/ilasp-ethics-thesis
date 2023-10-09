@@ -21,6 +21,7 @@ initiates(switch, switched, T) :- time(T), -holdsAt(switched, 0), T = 1.
 T = 1 :- happens(switch, T). % enforce that we can only switch at time 1
 
 % triggered event: keeps running if currently on this track and not crashed
+% if on the switchable(decision) track and switched or not switched? 
 happens(run(Trk, TrkNo + 1), T) :- T >= 1, not switchTrack(from(Trk, TrkNo), _), holdsAt(on(train, Trk, TrkNo), T), 
                                     -holdsAt(crashed, T), maxTracks(Q), TrkNo < Q. % if not switchable track, keep going to the next track
 happens(run(ToTrk, ToTrkNo), T) :- T >= 1, switchTrack(from(FromTrk, FromTrkNo), to(ToTrk, ToTrkNo)), 
