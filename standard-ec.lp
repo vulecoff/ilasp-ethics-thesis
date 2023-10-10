@@ -23,6 +23,7 @@ holdsAt(F, T2) :- initiates(E, F, T1), happens(E, T1), not clipped(T1, F, T2), T
 indeterminate(P, T) :- not holdsAt(P, T), not -holdsAt(P, T), time(T), fluent(P). 
 
 % track moment where fluent changed
+fluentFlipped(P, T + 1, toTrue) :- not holdsAt(P, T), holdsAt(P, T + 1), time(T). % fluents initiated at time > 0
 fluentFlipped(P, T + 1, toTrue) :- -holdsAt(P, T), holdsAt(P, T + 1). 
 fluentFlipped(P, T + 1, toFalse) :- holdsAt(P, T), -holdsAt(P, T + 1). 
 
