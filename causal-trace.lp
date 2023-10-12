@@ -3,11 +3,13 @@
 eventEffect(T, E, pres(F)) :- initiates(E, F, T), happens(E, T), fluentFlipped(F, T + 1, toTrue). 
 eventEffect(T, E, abs(F)) :- terminates(E, F, T), happens(E, T), fluentFlipped(F, T + 1, toFalse).
 
-% make sure that the happening of events is in Virtue of this specific effect
+% make sure that the happening of events is in Virtue of this specific effect. 
+% the salient effects: that is the fluent flipping cause the happening of some event
+% against some background condition that have been holding true
 fluentEffect(T, abs(F), E) :- -holdsAt(F, T), happens(E, T), precondition(abs(F), E).
 fluentEffect(T, pres(F), E) :- holdsAt(F, T), happens(E, T), precondition(pres(F), E).
 
-cause(E1, E2) :- eventEffect(T1, E1, F), fluentEffect(T2, F, E2), T1 < T2. 
+giveCause(E1, E2) :- eventEffect(T1, E1, F), fluentEffect(T2, F, E2), T1 < T2. 
 % consequence of runtime fluents --> events
 % how do I render these rules in preconditions semantics
 % how do we ascribe transitive causal power, given that
@@ -18,6 +20,7 @@ cause(E1, E2) :- eventEffect(T1, E1, F), fluentEffect(T2, F, E2), T1 < T2.
 
 % right now focus on the change-able fluent. These are the conditions-fluent that the event depends on
 precondition(pres(on(train, Trk, TrkNo)), run(Trk, TrkNo + 1)) :- track(Trk), trackNo(TrkNo). 
+precondition(pres(on(train, FromTrk, FromTrkNo)), run(ToTrk, ToTrkNo)) :- switchTrack(from(FromTrk, FromTrkNo), to(ToTrk, ToTrkNo)).
 precondition(abs(crashed), run(Trk, TrkNo + 1)) :- track(Trk), trackNo(TrkNo). 
 precondition(pres(switched), run(Trk, TrkNo)) :- track(Trk), trackNo(TrkNo). 
 precondition(abs(switched), run(Trk, TrkNo)) :- track(Trk), trackNo(TrkNo).
@@ -30,5 +33,5 @@ precondition(pres(on(P, Trk, TrkNo)), crash) :- track(Trk), trackNo(TrkNo), pati
 
 precondition(abs(alive(X)), deathOf(X)) :- patients(X). 
 
-#show cause/2.
-#show eventEffect/3. #show fluentEffect/3.
+#show giveCause/2.
+%#show eventEffect/3. #show fluentEffect/3.
