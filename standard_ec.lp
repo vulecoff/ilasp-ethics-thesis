@@ -32,8 +32,7 @@ T > 0 :- happens(E, T).
 
 %#show indeterminate/2. #show fluentFlipped/3.
 
-%TODO: next. Happens at zero.
-
+%TODO: next. Happens at zero
 % Required domain predicates: time, fluent, event
 %% END OF EVENT CALC AXIOMS
 
