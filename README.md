@@ -1,4 +1,11 @@
 # ilasp-ethics-thesis
 
-Automated ethical reasoning using answer set programming & inductive logic programming. 
+Thesis Project in progress: Automated ethical reasoning using answer set programming. 
+
+## Requirements
+- Clingo 5.6.0
+
+## Summary 
+- Poster summary 
+
 

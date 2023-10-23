@@ -7,8 +7,6 @@ test-yaleshooting:
 causal-trace: 
 	clingo standard_ec.lp causal_trace.lp trolley.test.lp --out-ifs=\\n -n 0
 
-sim: 
-	clingo possible_world_ec.lp --out-ifs=\\n -n 0
 
 trolley-dde: 
 	clingo trolley_dde.lp possible_world_ec.lp --out-ifs=\\n -n 0
