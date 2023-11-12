@@ -10,3 +10,6 @@ causal-trace:
 
 trolley-dde: 
 	clingo trolley_dde.lp possible_world_ec.lp --out-ifs=\\n -n 0
+
+env: 
+	conda activate py3.7
