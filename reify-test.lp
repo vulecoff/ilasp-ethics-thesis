@@ -4,7 +4,9 @@
 % bird(tux). penguin(tux). 
 % bird(tweety). chicken(tweety). 
 
-rule(1). head(fly(X))
+rule(r). head(happens(turnOff, 1), r). 
+pbl(holdsAt(isOn, 1),r). pbl(holdsAt(isNotBroken, 1), r). 
+precondition(F, E) :- rule(R), head(happens(E, T), R), pbl(holdsAt(F, T), R). 
 
 hold(H) :- head(H, R), rule(R), 
            #count {N: nbl(N, R), hold(N)} = 0, 
@@ -13,4 +15,6 @@ hold(H) :- head(H, R), rule(R),
 :- hold(X), hold(Y), compl(X, Y). 
 :- hold(null). 
 
+
 #show hold/1.
+#show precondition/2.
