@@ -7,6 +7,7 @@
 
 event(A, GD, Eff) :- action(A, GD, Eff). 
 event(U, GD, Eff) :- auto(U, GD, Eff). 
+event(E) :- event(E, GD, Eff)
 
 %%% Triggering of events axioms %%%
 
@@ -21,7 +22,28 @@ happens(E, GD, T) :- triggered(E, GD, T).
 apply(E, Eff, T) :- happens(E, GD, T), event(E, GD, Eff). 
 
 % Relation between event and atomic fluent
+% initiated/terminated = actually happened
+initiated(E, F, T) :- apply(E, Eff, T), in(Eff, F), holds(neg(F), T), fluent(F).  % <experimental>
+terminated(E, F, T) :- apply(E, Eff, T), in(Eff, neg(F)), holds(F, T), fluent(F). % <experimental>
 
+% influence of events on fluents
+holds(F, 0) :- initiallyP(F), fluent(F). 
+holds(neg(F), 0) :- initiallyN(F), fluent(F). 
+holds(F, T + 1) :- initiated(E, F, T), fluent(F). 
+holds(neg(F), T + 1) :- terminated(E, F, T), fluent(F). 
 
+% Inertia of fluents
+holds(F, T + 1) :- holds(F, T), fluent(F), not terminated(E, F, T): event(E). 
+holds(neg(F), T + 1) :- holds(neg(F), T), fluent(F), not initiated(E, F, T): event(E). 
+
+% Constraints. For now, print error. 
+
+% :- holds(F, T), holds(neg(F), T), time(T). 
+error("Opposite fluents hold at same time", info(F, T)) :- holds(F, T), holds(neg(F), T), time(T). 
+error("Indeterminate fluent", info(F, T)) :- fluent(F), time(T), not holds(F, T), not holds(neg(F), T). 
+
+%%% Compound states. DNF forms. 
+
+#show error/2.
 
 
