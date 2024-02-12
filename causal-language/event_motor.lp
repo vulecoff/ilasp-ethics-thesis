@@ -7,7 +7,7 @@
 
 event(A, GD, Eff) :- action(A, GD, Eff). 
 event(U, GD, Eff) :- auto(U, GD, Eff). 
-event(E) :- event(E, GD, Eff)
+event(E) :- event(E, GD, Eff).
 
 %%% Triggering of events axioms %%%
 
@@ -27,14 +27,16 @@ initiated(E, F, T) :- apply(E, Eff, T), in(Eff, F), holds(neg(F), T), fluent(F).
 terminated(E, F, T) :- apply(E, Eff, T), in(Eff, neg(F)), holds(F, T), fluent(F). % <experimental>
 
 % influence of events on fluents
+
 holds(F, 0) :- initiallyP(F), fluent(F). 
 holds(neg(F), 0) :- initiallyN(F), fluent(F). 
 holds(F, T + 1) :- initiated(E, F, T), fluent(F). 
 holds(neg(F), T + 1) :- terminated(E, F, T), fluent(F). 
 
 % Inertia of fluents
-holds(F, T + 1) :- holds(F, T), fluent(F), not terminated(E, F, T): event(E). 
-holds(neg(F), T + 1) :- holds(neg(F), T), fluent(F), not initiated(E, F, T): event(E). 
+
+holds(F, T + 1) :- holds(F, T), fluent(F), time(T), not terminated(E, F, T): event(E). 
+holds(neg(F), T + 1) :- holds(neg(F), T), fluent(F), time(T), not initiated(E, F, T): event(E). 
 
 % Constraints. For now, print error. 
 
@@ -44,6 +46,13 @@ error("Indeterminate fluent", info(F, T)) :- fluent(F), time(T), not holds(F, T)
 
 %%% Compound states. DNF forms. 
 
-#show error/2.
+holds(true, T) :- time(T).  
+% single out compound as in action's effect. A little bit clunky in logic here. <TODO>. 
+holds(C, T) :- conj(C), time(T), holds(F, T):in(C, F);  fluent(F), not event(_, _, C).  
+holds(D, T) :- disj(D), holds(F, T), in(D, F), fluent(F), not event(_, _, D). 
+% problematic here: time limits | make clear a time point: end_time, allowed_action times
 
+#show error/2.
+#show holds/2.
+#show happens/3. 
 
