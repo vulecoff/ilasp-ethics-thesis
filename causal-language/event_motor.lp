@@ -28,8 +28,9 @@ apply(E, Eff, T) :- happens(E, GD, T), event(E, GD, Eff).
 
 % Relation between event and atomic fluent
 % initiated/terminated = actually happened
-initiated(E, F, T) :- apply(E, Eff, T), in(Eff, F), holds(neg(F), T), fluent(F).  % <experimental>
+initiated(E, F, T) :- apply(E, Eff, T), in(Eff, F), holds(neg(F), T), fluent(F).  % <experimental> 
 terminated(E, F, T) :- apply(E, Eff, T), in(Eff, neg(F)), holds(F, T), fluent(F). % <experimental>
+% TODO: potential shortcoming - if already dead, that action will not be recorded, only actions that affect a change in state are recorded
 
 % influence of events on fluents
 
@@ -49,8 +50,13 @@ holds(neg(F), T + 1) :- holds(neg(F), T), fluent(F), time(T), maxTime(T2), T < T
 error("Opposite fluents hold at same time", info(F, T)) :- holds(F, T), holds(neg(F), T), time(T). 
 error("Indeterminate fluent", info(F, T)) :- fluent(F), time(T), not holds(F, T), not holds(neg(F), T). 
 
-%%% Compound states. DNF forms. 
+%%% States and fluents. DNF forms. 
+% Primitive fluents: literal are either F, or -F
+literal(neg(F)) :- fluent(F). 
+literal(F) :- fluent(F). 
+in(L, L) :- literal(L).
 
+% Compound states
 holds(true, T) :- time(T).  
 % single out compound as in action's effect. A little bit clunky in logic here. <TODO>. 
 % Note: F here is literal: F, neg(F): TODO: what is the use of literal in their programs

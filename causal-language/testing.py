@@ -27,7 +27,7 @@ def parseTestFile(testFile):
 Model number: fail / pass
 """
 def compareOnModel(model, inAS, notInAS): 
-    print("Testing model number", model.number)
+    print("Model#:", model.number)
     failedIn = []
     failedNotIn = []
     ok = True 
@@ -46,6 +46,9 @@ def compareOnModel(model, inAS, notInAS):
         print("Failed in: ", failedIn)
         print("Failed not in: ", failedNotIn)
 
+""" 
+TODO: write docs
+"""
 def unitTest(testname, problemEncodingFile, expectedFile): 
     print("------")
     print("Test:", testname)
