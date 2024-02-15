@@ -12,7 +12,7 @@
 %s_sup = pollution indicator above threshold
 %d = inhabitants deprived of drinking water
 
-time(0..3).
+maxTime(4).
 
 initiallyP(t_os).			
 initiallyN(m_k). 

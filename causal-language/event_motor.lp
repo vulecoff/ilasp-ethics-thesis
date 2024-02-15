@@ -5,9 +5,14 @@
 %%% Docs %%%
 % Ontologies: event[name, predStates, effState] - {action, auto}. 
 
+%%% Event and Actions %%%
 event(A, GD, Eff) :- action(A, GD, Eff). 
 event(U, GD, Eff) :- auto(U, GD, Eff). 
 event(E) :- event(E, GD, Eff).
+
+
+%%% Time points %%%
+time(0..T) :- maxTime(T).
 
 %%% Triggering of events axioms %%%
 
@@ -33,10 +38,10 @@ holds(neg(F), 0) :- initiallyN(F), fluent(F).
 holds(F, T + 1) :- initiated(E, F, T), fluent(F). 
 holds(neg(F), T + 1) :- terminated(E, F, T), fluent(F). 
 
-% Inertia of fluents
+% Inertia of fluents. Compound states do not have inertia
 
-holds(F, T + 1) :- holds(F, T), fluent(F), time(T), not terminated(E, F, T): event(E). 
-holds(neg(F), T + 1) :- holds(neg(F), T), fluent(F), time(T), not initiated(E, F, T): event(E). 
+holds(F, T + 1) :- holds(F, T), fluent(F), time(T), maxTime(T2), T < T2 , not terminated(E, F, T): event(E). 
+holds(neg(F), T + 1) :- holds(neg(F), T), fluent(F), time(T), maxTime(T2), T < T2, not initiated(E, F, T): event(E). 
 
 % Constraints. For now, print error. 
 
@@ -48,9 +53,9 @@ error("Indeterminate fluent", info(F, T)) :- fluent(F), time(T), not holds(F, T)
 
 holds(true, T) :- time(T).  
 % single out compound as in action's effect. A little bit clunky in logic here. <TODO>. 
-holds(C, T) :- conj(C), time(T), holds(F, T):in(C, F);  fluent(F), not event(_, _, C).  
-holds(D, T) :- disj(D), holds(F, T), in(D, F), fluent(F), not event(_, _, D). 
-% problematic here: time limits | make clear a time point: end_time, allowed_action times
+% Note: F here is literal: F, neg(F): TODO: what is the use of literal in their programs
+holds(C, T) :- conj(C), time(T), holds(F, T):in(C, F);  not event(_, _, C).  
+holds(D, T) :- disj(D), holds(F, T), time(T), in(D, F), not event(_, _, D). 
 
 #show error/2.
 #show holds/2.

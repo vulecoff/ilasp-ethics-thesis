@@ -15,7 +15,7 @@ def to_match(cSymbol, matchList):
 def on_model(m):
     print("Model:", m.number)
     atoms = m.symbols(atoms=True)
-    EC_preds = [ ["holds", 2], ["happens", 3] ]
+    EC_preds = [ ["holds", 2], ["happens", 3]]
     error_preds = [["error", 2]]
 
     ec_atoms = []
@@ -39,7 +39,7 @@ def main():
     clingo_args = ["-n 0"]
     ctl = Control(clingo_args)
     
-    exampleFile = "examples/pollution.lp"
+    exampleFile = "examples/yaleshooting/yaleshooting.lp"
     files = [EVENT_MOTOR_FILE, exampleFile]
     for f in files: 
         ctl.load(f)
