@@ -12,6 +12,10 @@ direct_ness(Event, as(L, T + 1)) :- direct_ness(Event, as(L, T)), inertia(as(L, 
 direct_ness(Event, as(GD, T)) :- direct_ness(Event, as(GD_S, T)), r_as(as(GD_S, T), as(GD, T)).
 % TODO: GD - bigger compound state, GD_S - sub compound state or primitive state
 
-weight(as(D, T), L, ratio(N, K)) :- disj(D), holds(D, T), literal(L), time(T), 
-                          N = #count{C: conj(C), r_as(as(L, T), as(C, T)), r_as(as(C, T), as(D, T))}, N > 0,
-                          K = #count{C: conj(C), r_as(as(C, T), as(D, T))}.
+weight(as(D, T), L, ratio(K, N)) :- disj(D), holds(D, T), literal(L), time(T), 
+                          K = #count{C: conj(C), r_as(as(L, T), as(C, T)), r_as(as(C, T), as(D, T))}, K > 0,
+                          N = #count{C: conj(C), r_as(as(C, T), as(D, T))}.
+
+weight(as(D, T), ao(E, T1), ratio(K, N)) :- disj(D), holds(D, T), direct_ness(ao(E, T1), as(D, T)), T1 < T,
+                                          K = #count{C: conj(C), r_as(as(C, T), as(D, T)), direct_ness(ao(E, T1), as(C, T))}, K > 0,
+                                          N = #count{C: conj(C), r_as(as(C, T), as(D, T))}. 
