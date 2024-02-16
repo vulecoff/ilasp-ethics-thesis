@@ -18,7 +18,7 @@ def on_model(m):
     print()
     atoms = m.symbols(atoms=True)
     EC_preds = [ ["holds", 2], ["happens", 3]]
-    causal_preds = [["direct_ness", 2]]
+    causal_preds = [["direct_ness", 2], ["weight", 3]]
     error_preds = [["error", 2]]
 
     ec_atoms = []
