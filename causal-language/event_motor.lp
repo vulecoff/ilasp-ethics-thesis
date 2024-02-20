@@ -24,13 +24,21 @@ happens(E, GD, T) :- triggered(E, GD, T).
 
 %%% Effect of events axioms %%%
 
-apply(E, Eff, T) :- happens(E, GD, T), event(E, GD, Eff). 
+apply(E, Eff, T) :- happens(E, GD, T), event(E, GD, Eff), not delayedEff(E, Eff, TD): time(TD).
+% T + TD is the time that the effect will takes effect.
+apply(E, Eff, T + TD - 1) :- happens(E, GD, T), event(E, GD, Eff), delayedEff(E, Eff, TD),
+                            time(TD), maxTime(M), T + TD <= M, TD > 0.
+
+% TODO: here is more of a warning than error
+error("Delayed effect time exceeds maxtime", info(delayedEff(E, Eff, TD), happens(E, T))) 
+    :- happens(E, GD, T), event(E, GD, Eff), delayedEff(E, Eff, TD), maxTime(M), TD + T > M. 
 
 % Relation between event and atomic fluent
 % initiated/terminated = actually happened
 initiated(E, F, T) :- apply(E, Eff, T), in(Eff, F), holds(neg(F), T), fluent(F).  % <experimental> 
 terminated(E, F, T) :- apply(E, Eff, T), in(Eff, neg(F)), holds(F, T), fluent(F). % <experimental>
 % TODO: potential shortcoming - if already dead, that action will not be recorded, only actions that affect a change in state are recorded
+
 
 % influence of events on fluents
 
@@ -58,8 +66,9 @@ in(L, L) :- literal(L).
 
 % Compound states
 holds(true, T) :- time(T).  
-% single out compound as in action's effect. A little bit clunky in logic here. <TODO>. 
-% Note: F here is literal: F, neg(F): TODO: what is the use of literal in their programs
+% single out compound as in action's effect, not part of ANY events' effect (use of anon var)
+% Note: F here is literal: F, neg(F)
+% TODO: may be clunky logic, test this? How
 holds(C, T) :- conj(C), time(T), holds(F, T):in(C, F);  not event(_, _, C).  
 holds(D, T) :- disj(D), holds(F, T), time(T), in(D, F), not event(_, _, D). 
 
