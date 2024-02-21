@@ -4,6 +4,8 @@
 
 %%% Docs %%%
 % Ontologies: event[name, predStates, effState] - {action, auto}. 
+% GD: goal descriptor, states relevant to the triggering of events, anything that can be "holds()", disjuctive + conjuctive
+% Eff: conjunctive only, holds by the effect of event
 
 %%% Event and Actions %%%
 event(A, GD, Eff) :- action(A, GD, Eff). 
@@ -16,7 +18,7 @@ time(0..T) :- maxTime(T).
 
 %%% Triggering of events axioms %%%
 
-% Removed priority of concurrent events: this should not be a means of resolving conflict
+% Removed priority of concurrent events: this should not be a means of resolving conflict for automatic events
 triggered(A, GD, T) :- action(A, GD, Eff), performs(A, T), holds(GD, T).  % for action, predStates hold + agent performs
 triggered(U, GD, T) :- auto(U, GD, Eff), holds(GD, T).  % for autoEvent, predStates hold is enough
 happens(E, GD, T) :- triggered(E, GD, T).
@@ -68,7 +70,7 @@ in(L, L) :- literal(L).
 holds(true, T) :- time(T).  
 % single out compound as in action's effect, not part of ANY events' effect (use of anon var)
 % Note: F here is literal: F, neg(F)
-% TODO: may be clunky logic, test this? How
+% TODO: may be clunky logic, test this? How. 
 holds(C, T) :- conj(C), time(T), holds(F, T):in(C, F);  not event(_, _, C).  
 holds(D, T) :- disj(D), holds(F, T), time(T), in(D, F), not event(_, _, D). 
 
