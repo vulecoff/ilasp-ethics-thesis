@@ -51,7 +51,7 @@ def main():
     clingo_args = ["-n 0"] # find all models
     ctl = Control(clingo_args)
     
-    exampleFile = "examples/preemption/suzy_billy.lp"
+    exampleFile = "examples/duplication/voting.lp"
     files = [EVENT_MOTOR_FILE, CAUSAL_MOTOR_FILE, exampleFile]
     for f in files: 
         ctl.load(f)
