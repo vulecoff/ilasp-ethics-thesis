@@ -15,8 +15,11 @@ direct_ness(Event, as(GD, T)) :- direct_ness(Event, as(GD_S, T)), r_as(as(GD_S, 
 % TODO: GD - bigger compound state, GD_S - sub compound state or primitive state
 
 %%% NESS
-% ness(ao(E1, T1), as(GD, T2)) :- direct_ness(ao(E1, T1), as(GD, T2)). 
-% ness(ao(E1, T1), as(GD))
+ness(ao(E1, T1), as(GD, T2)) :- direct_ness(ao(E1, T1), as(GD, T2)). 
+ness(ao(E1, T1), as(GD, T3)) :- actual(ao(E1, T1), ao(E2, T2)), ness(ao(E2, T2), as(GD, T3)). 
+
+%%% Actual Cause
+actual(ao(E1, T1), ao(E2, T2)) :- ness(ao(E1, T1), as(GD, T2)), happens(E2, GD, T2), auto(E2, GD, Eff). 
 
 
 %%% Weight. As of now, this requires eff to be in proper disjunctive form (with disj and conj state)

@@ -1,3 +1,5 @@
+% electrocuted = (l1 * l4) + (l2 * l4) + (l3 * l4)
+
 maxTime(2).
 
 fluent(l1; l2; l3; l4). 

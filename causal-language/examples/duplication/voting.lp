@@ -1,6 +1,8 @@
+% Working
+
 maxTime(2). 
-fluent(a_voted; b_voted; c_voted; d_voted; e_voted).
-initiallyN(a_voted; b_voted; c_voted; d_voted; e_voted). 
+fluent(a_voted; b_voted; c_voted; d_voted).
+initiallyN(a_voted; b_voted; c_voted; d_voted). 
 
 disj(p_elected). in(p_elected, (c1; c2; c3; c4)). 
 conj(c1). in(c1, in(a_voted; b_voted; c_voted)). 
