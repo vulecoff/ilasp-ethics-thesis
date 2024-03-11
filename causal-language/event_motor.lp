@@ -18,10 +18,11 @@ time(0..T) :- maxTime(T).
 
 %%% Triggering of events axioms %%%
 
-% Removed priority of concurrent events: this should not be a means of resolving conflict for automatic events
+% TODO: Replace priority feature 
 triggered(A, GD, T) :- action(A, GD, Eff), performs(A, T), holds(GD, T).  % for action, predStates hold + agent performs
 triggered(U, GD, T) :- auto(U, GD, Eff), holds(GD, T).  % for autoEvent, predStates hold is enough
-happens(E, GD, T) :- triggered(E, GD, T).
+overtaken(E1,T) :- triggered(E1, _, T), happens(E2, _, T), priority(E2, E1), E2!=E1.
+happens(E,GD,T) :- triggered(E, GD, T), not overtaken(E, T).
 
 
 %%% Effect of events axioms %%%
