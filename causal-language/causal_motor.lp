@@ -27,6 +27,6 @@ weight(as(D, T), L, ratio(K, N)) :- disj(D), holds(D, T), literal(L), time(T),
                           K = #count{C: conj(C), r_as(as(L, T), as(C, T)), r_as(as(C, T), as(D, T))}, K > 0,
                           N = #count{C: conj(C), r_as(as(C, T), as(D, T))}.
 
-weight(as(D, T), ao(E, T1), ratio(K, N)) :- disj(D), holds(D, T), direct_ness(ao(E, T1), as(D, T)), T1 < T,
-                                          K = #count{C: conj(C), r_as(as(C, T), as(D, T)), direct_ness(ao(E, T1), as(C, T))}, K > 0,
+weight(as(D, T), ao(E, T1), ratio(K, N)) :- disj(D), holds(D, T), ness(ao(E, T1), as(D, T)), T1 < T,
+                                          K = #count{C: conj(C), r_as(as(C, T), as(D, T)), ness(ao(E, T1), as(C, T))}, K > 0,
                                           N = #count{C: conj(C), r_as(as(C, T), as(D, T))}. 

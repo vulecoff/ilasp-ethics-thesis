@@ -18,7 +18,7 @@ def on_model(m):
     print()
     atoms = m.symbols(atoms=True)
     EC_preds = [ ["holds", 2], ["happens", 3]]
-    causal_preds = [["direct_ness", 2], ["weight", 3]]
+    causal_preds = [["ness", 2], ["weight", 3]]
     error_preds = [["error", 2]]
 
     ec_atoms = []
@@ -51,7 +51,7 @@ def main():
     clingo_args = ["-n 0"] # find all models
     ctl = Control(clingo_args)
     
-    exampleFile = "examples/duplication/electrocute.lp"
+    exampleFile = "examples/preemption/hitman_poison.lp"
     files = [EVENT_MOTOR_FILE, CAUSAL_MOTOR_FILE, exampleFile]
     for f in files: 
         ctl.load(f)
