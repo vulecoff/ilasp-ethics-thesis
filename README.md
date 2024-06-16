@@ -1,11 +1,17 @@
 # ilasp-ethics-thesis
 
-Thesis Project in progress: Automated ethical reasoning using answer set programming. 
+Logic-based AI for causal and ethical reasoning.
+
+-   Implementation of NESS-theory of causation
+-   Logic Programming: Answer Set Programming
+-   Sample encoding of ethical dilemmas
 
 ## Requirements
-- Clingo 5.6.0
 
-## Summary 
-- [Poster](Automating_the_Moral_Reasoning_Process_in_Ethical_Dilemmas.pdf) summary 
+-   Python 3.7
+-   Clingo 5.6.0
 
+## Summary
 
+-   [Poster](Poster.pdf)
+-   [Thesis](Senior_Thesis.pdf)
